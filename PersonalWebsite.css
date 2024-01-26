@@ -16,6 +16,10 @@ a {color:rgb(0, 0, 0)}
 .rounded-logo {
   border-radius: 25px;
 }
+.instruction-text {
+  font-size: smaller; /* Adjust the font size to make it smaller */
+  /* Add any other styling as needed */
+}
 
 /* Style the header */
 header {
