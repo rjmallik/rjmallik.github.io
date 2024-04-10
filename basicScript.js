@@ -20,4 +20,4 @@ document.addEventListener('DOMContentLoaded', function () {
         // Use a simple page redirection for demonstration
         window.location.href = page;
     }
-});
+});s
