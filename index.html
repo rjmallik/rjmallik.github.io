@@ -245,17 +245,36 @@
       .htimeline{position:relative;margin:10px 0 10px}
       .tl-track{
         --tl-top:236px;
+        /* distance from the track's right edge back to the LAST stop's
+           dot centre. The spine used to run the full track width, so
+           on a phone — where each stop is a fixed 196px column (300px
+           expanded) — the line and its arrowhead trailed ~98px past
+           the SDE 1 dot (150px with that card expanded): a long empty
+           orange run with no stops on it, after the last experience.
+           The spine now ends just past that dot: the line runs 20px
+           beyond it and the arrowhead takes the next 11px, so the
+           arrow finishes 31px after the last experience instead of
+           going on for a while. --tl-tail is re-set below for the
+           narrow layout and for the last stop's expanded state, the
+           two cases where the last dot's position actually moves. */
+        --tl-tail:70px;
         position:relative;padding-top:var(--tl-top);
         display:flex;gap:10px;align-items:flex-start;
       }
       .tl-track::before{
-        content:"";position:absolute;left:4px;right:14px;top:calc(var(--tl-top) + 7px);height:2px;border-radius:2px;
+        content:"";position:absolute;left:4px;right:calc(var(--tl-tail) - 20px);top:calc(var(--tl-top) + 7px);height:2px;border-radius:2px;
         background:linear-gradient(to right,var(--accent),var(--line) 16%,var(--line) 84%,var(--accent));
       }
       .tl-track::after{
-        content:"";position:absolute;right:0;top:calc(var(--tl-top) + 3px);
+        content:"";position:absolute;right:calc(var(--tl-tail) - 31px);top:calc(var(--tl-top) + 3px);
         border-left:11px solid var(--accent);border-top:5px solid transparent;border-bottom:5px solid transparent;
       }
+      /* desktop: the last stop's column grows when its own card is
+         hovered / focused / tapped open, moving its dot left of
+         where the collapsed tail ends — widen the tail to match */
+      .tl-track:has(> .t-item:last-child .t-card:hover),
+      .tl-track:has(> .t-item:last-child .t-card:focus-visible),
+      .tl-track:has(> .t-item:last-child .t-card.expanded){--tl-tail:125px}
       .t-item{
         position:relative;flex:1.18 1 0;min-width:0;
         display:grid;grid-template-rows:16px minmax(36px,auto) 1fr;row-gap:8px;
@@ -420,7 +439,12 @@
         /* the track stretches to the full width of all nine stops, so
            the spine on it runs under every dot from Born to SDE 1
            instead of ending one screen in */
-        .tl-track{width:max-content;min-width:100%}
+        .tl-track{width:max-content;min-width:100%;--tl-tail:98px}
+        /* phone, last stop expanded: its column is 300px wide, so its
+           dot sits 150px from the track's right edge */
+        .tl-track:has(> .t-item:last-child .t-card:hover),
+        .tl-track:has(> .t-item:last-child .t-card:focus-visible),
+        .tl-track:has(> .t-item:last-child .t-card.expanded){--tl-tail:150px}
         .t-item{flex:0 0 196px}
         .t-item.milestone{flex:0 0 108px}
         .t-item:has(.t-card:hover),.t-item:has(.t-card:focus-visible),.t-item:has(.t-card.expanded){flex:0 0 300px}
@@ -504,7 +528,7 @@
     <div class="page" id="page-experience" hidden>
       <div class="wrap wrap-wide">
         <div class="exp-hero">
-          <h2>Where I&rsquo;ve been</h2>
+          <h2>What I&rsquo;ve done</h2>
           <p class="outside">Outside of work, I enjoy playing basketball and watching all kinds of sports. I am a big media head as well, enjoying video games, TV, movies, and books.</p>
         </div>
 
@@ -543,9 +567,8 @@
               <article class="t-card" tabindex="0">
                 <h3>B.S. Computer Science + Mathematics</h3>
                 <div class="t-details">
-                  <p class="t-org">University of California, Santa Cruz — graduated with honors</p>
-                  <p><strong>Double major</strong> in Computer Science and Mathematics (Theory &amp; Computation), <strong>graduated with honors</strong>.</p>
-                  <p>This runs underneath the teaching and research below — both happened during the degree.</p>
+                  <p>University of California, Santa Cruz — <strong>Double major</strong> in Computer Science and Mathematics (Theory &amp; Computation), <strong>graduated with honors</strong>.</p>
+                  <p>Certifications, training, clubs, and programs ran throughout college as well, and different personal projects ran throughout college too — described in my LinkedIn and GitHub.</p>
                 </div>
               </article>
             </div>
@@ -617,7 +640,7 @@
                     <li>Validating the new <strong>5-tuple Policy-Based Routing architecture</strong> (up from 2-tuple) across all five Transit Gateway attachment types, and catching release-blocking defects before production launch.</li>
                     <li>Fixed a 4-year-old memory leak — <strong>memory usage improved 8×</strong>, so maintenance is needed less often.</li>
                     <li>Extended the chaos testing framework to every TGW routing data path to improve resilience profiling, address issues in the service, and match the intended customer experience.</li>
-                    <li>On-call: defect fixes in Transit Gateway and VPC Route Server, leading standups and coordinating high-severity issues.</li>
+                    <li><strong>On-call:</strong> defect fixes in Transit Gateway and VPC Route Server, leading standups and coordinating high-severity issues.</li>
                   </ul>
                 </div>
               </article>
