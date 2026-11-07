@@ -24,6 +24,7 @@
         --bubble-ai:#141412;
         --bubble-ai-ink:#f5f4f0;
         --accent:#e8590c;
+        --on-accent:#ffffff;
         --accent-soft:#fdeee3;
         --pill-bg:#ffffff;
         --pill-line:#d8d5cd;
@@ -45,6 +46,7 @@
         --bubble-ai:#f2f1ed;
         --bubble-ai-ink:#141412;
         --accent:#ff922b;
+        --on-accent:#1a1206;
         --accent-soft:#2b1c10;
         --pill-bg:#1c1c1c;
         --pill-line:#333331;
@@ -57,7 +59,7 @@
         html:not([data-theme="light"]){
           --bg:#101010;--surface:#171717;--surface-2:#1e1e1e;--ink:#f2f1ed;--ink-2:#b3b0a8;--ink-3:#7d7a73;
           --line:#2a2a2a;--bubble-user:#262626;--bubble-user-ink:#f2f1ed;--bubble-ai:#f2f1ed;--bubble-ai-ink:#141412;
-          --accent:#ff922b;--accent-soft:#2b1c10;--pill-bg:#1c1c1c;--pill-line:#333331;
+          --accent:#ff922b;--on-accent:#1a1206;--accent-soft:#2b1c10;--pill-bg:#1c1c1c;--pill-line:#333331;
           --chat-bg:#131313;--chat-head-bg:#0f0f0f;
           --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px -12px rgba(0,0,0,.5);color-scheme:dark;
         }
@@ -93,11 +95,11 @@
       }
       .theme-btn:hover{border-color:var(--ink-3);color:var(--ink)}
       .theme-btn svg{width:15px;height:15px;flex:none}
-      .brand{justify-self:center;text-align:center;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink)}
+      .brand{justify-self:center;text-align:center;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:19px;letter-spacing:.02em;color:var(--ink)}
       .brand b{color:var(--ink);font-weight:700}
       nav.main{display:flex;gap:4px;justify-self:end}
       nav.main a{
-        font-family:"IBM Plex Mono",monospace;font-size:13px;text-decoration:none;color:var(--ink-2);
+        font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:700;text-decoration:none;color:var(--ink-2);
         padding:6px 10px;border-radius:8px;
       }
       nav.main a:hover{color:var(--ink);background:var(--surface-2)}
@@ -169,12 +171,12 @@
       .suggest{padding:6px 18px 14px;display:flex;flex-wrap:wrap;gap:8px}
       .suggest button{
         font-family:"IBM Plex Mono",monospace;font-size:12.5px;cursor:pointer;
-        background:var(--pill-bg);color:var(--ink-2);border:1px solid var(--pill-line);
-        border-radius:999px;padding:7px 14px;transition:border-color .15s,color .15s;
+        background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);
+        border-radius:999px;padding:7px 14px;transition:background .15s,border-color .15s,color .15s;
       }
-      .suggest button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+      .suggest button:hover:not(:disabled){background:transparent;border-color:var(--accent);color:var(--accent)}
       .suggest button:disabled{opacity:.45;cursor:default}
-      .suggest button.asked{border-color:var(--line);color:var(--ink-3)}
+      .suggest button.asked{background:transparent;border-color:var(--line);color:var(--ink-3)}
 
       .chat-input{
         display:flex;align-items:center;gap:10px;margin:0 14px 14px;padding:11px 14px;
@@ -340,10 +342,12 @@
       .t-label{margin:0;text-align:center;font-size:13.5px;font-weight:400;color:var(--ink-2);line-height:1.45}
       .t-label b{color:var(--ink);font-weight:400}
       .t-card{
-        background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
-        padding:14px 15px;cursor:pointer;outline:none;transition:border-color .2s ease;
+        background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);border-radius:14px;box-shadow:var(--shadow);
+        padding:14px 15px;cursor:pointer;outline:none;transition:background .2s ease,border-color .2s ease,color .2s ease;
       }
-      .t-card:hover,.t-card:focus-visible,.t-card.expanded{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+      .t-card .t-org,.t-card .t-details p,.t-card .t-details li{color:inherit}
+      .t-card .t-details li b,.t-card .t-details p b,.t-card .t-details li strong,.t-card .t-details p strong{color:inherit}
+      .t-card:hover,.t-card:focus-visible,.t-card.expanded{background:transparent;border-color:var(--accent);color:var(--accent)}
       .t-card h3{margin:0;font-size:15.5px;font-weight:400;letter-spacing:-.01em;line-height:1.32}
       .t-org{margin:0 0 8px;font-size:13.5px;color:var(--ink);font-weight:400;line-height:1.45}
       .t-details{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,.8,.3,1),opacity .3s ease,margin .3s ease;margin-top:0}
@@ -483,7 +487,6 @@
         <div class="exp-hero">
           <h2>Where I&rsquo;ve been</h2>
           <p class="outside">Outside of work, I enjoy playing basketball and watching all kinds of sports. I am a big media head as well, enjoying video games, TV, movies, and books.</p>
-          <p class="hint">hover to expand; tap if on a touchscreen</p>
         </div>
 
         <div class="htimeline" id="htimeline">
@@ -538,7 +541,8 @@
                 <div class="t-details">
                   <p class="t-org">Think Academy</p>
                   <ul>
-                    <li>Taught Mathematics and tutored Mathematics and Computer Science to students of all ages, up to the college level.</li>
+                    <li>Tutored Math to younger-aged students.</li>
+                    <li>Also <strong>tutored a few CS classes at my college</strong>.</li>
                   </ul>
                 </div>
               </article>
@@ -721,7 +725,7 @@
           now: '<p>Working as an SDE 1 at AWS.</p>',
           study: '<p>I studied at the University of California, Santa Cruz, where I <strong>double-majored in Computer Science and Mathematics</strong> and <strong>graduated with honors</strong>.</p>' +
                '<p>The pairing shaped how I work: computer science for building systems, mathematics for reasoning carefully about how they behave. Toward the end of the degree my interests settled on systems and networking, which is the thread that led to Transit Gateway.</p>',
-          before: '<p>Before AWS full-time, I did <strong>Generative AI research</strong> as an undergraduate at UC Santa Cruz, and I tutored Mathematics and Computer Science at Think Academy, <strong>also tutored college classes</strong> alongside my time at UCSC, to students of all ages, up to the college level.</p>' +
+          before: '<p>Before AWS full-time, I did undergraduate research at UC Santa Cruz, and I tutored Math at Think Academy for younger-aged students. I also <strong>tutored a few CS classes at my college</strong>.</p>' +
                '<p>I also interned at AWS with Transit Gateway, where I built a modular chaos testing framework for TGW routing. Once I joined full time, I built on that work, extending the framework across the TGW routing data paths.</p>',
           research: '<p>My undergraduate research was about automating the QA process for Android applications.</p>',
           languages: '<p>Day to day it\u2019s mostly Python and Java. Across my resumes, coursework, research, and jobs, the full list is:</p>' +
