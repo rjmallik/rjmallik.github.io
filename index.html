@@ -251,10 +251,12 @@
            expanded) — the line and its arrowhead trailed ~98px past
            the SDE 1 dot (150px with that card expanded): a long empty
            orange run with no stops on it, after the last experience.
-           The spine now ends just past that dot: the line runs 20px
-           beyond it and the arrowhead takes the next 11px, so the
-           arrow finishes 31px after the last experience instead of
-           going on for a while. --tl-tail is re-set below for the
+           The spine now ends just past that dot: the line runs 5px
+           beyond its centre (the dot itself is 15px wide, so the
+           line tucks just under its right edge) and the arrowhead
+           takes the next 11px, so the arrow finishes 16px after
+           the last experience — a short cap, not a long empty run.
+           --tl-tail is re-set below for the
            narrow layout and for the last stop's expanded state, the
            two cases where the last dot's position actually moves. */
         --tl-tail:70px;
@@ -262,11 +264,11 @@
         display:flex;gap:10px;align-items:flex-start;
       }
       .tl-track::before{
-        content:"";position:absolute;left:4px;right:calc(var(--tl-tail) - 20px);top:calc(var(--tl-top) + 7px);height:2px;border-radius:2px;
+        content:"";position:absolute;left:4px;right:calc(var(--tl-tail) - 5px);top:calc(var(--tl-top) + 7px);height:2px;border-radius:2px;
         background:linear-gradient(to right,var(--accent),var(--line) 16%,var(--line) 84%,var(--accent));
       }
       .tl-track::after{
-        content:"";position:absolute;right:calc(var(--tl-tail) - 31px);top:calc(var(--tl-top) + 3px);
+        content:"";position:absolute;right:calc(var(--tl-tail) - 16px);top:calc(var(--tl-top) + 3px);
         border-left:11px solid var(--accent);border-top:5px solid transparent;border-bottom:5px solid transparent;
       }
       /* desktop: the last stop's column grows when its own card is
@@ -893,9 +895,7 @@
             a.classList.toggle("active", on);
             if(on) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
           });
-          document.title = name === "experience"
-            ? "Experience — RJ Mallik"
-            : "RJ Mallik — SDE @ AWS Transit Gateway";
+          document.title = "RJ Mallik";
           if(pushHash){
             var target = name === "experience" ? "#experience" : "#home";
             if(window.location.hash !== target) history.pushState(null, "", target);
