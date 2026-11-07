@@ -95,7 +95,9 @@
       }
       .theme-btn:hover{border-color:var(--ink-3);color:var(--ink)}
       .theme-btn svg{width:15px;height:15px;flex:none}
-      .brand{justify-self:center;text-align:center;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:19px;letter-spacing:.02em;color:var(--ink)}
+      .brand{justify-self:center;text-align:center;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:19px;letter-spacing:.02em;color:var(--ink);background:none;border:0;padding:4px 8px;margin:0;cursor:pointer;border-radius:8px;line-height:1}
+      .brand:hover{color:var(--accent)}
+      .brand:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
       .brand b{color:var(--ink);font-weight:700}
       nav.main{display:flex;gap:4px;justify-self:end}
       nav.main a{
@@ -435,7 +437,7 @@
         <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
         <span id="themeLabel">dark</span>
       </button>
-      <span class="brand">&lt;RJ&gt;</span>
+      <button class="brand" id="brandBtn" type="button" aria-label="Reload — back to home" title="Reload — back to home">&lt;RJ&gt;</button>
       <nav class="main" aria-label="Pages">
         <a href="#home" data-page="home" class="active">&lt;Home&gt;</a>
         <a href="#experience" data-page="experience">&lt;Experience&gt;</a>
@@ -646,6 +648,16 @@
           syncLabel();
         });
 
+        /* ---------- brand <RJ>: reload ----------
+           The click handler is wired up below, with the page-switching
+           code. A hard window.location.reload() does nothing visible
+           inside the sandboxed preview frame, and even in a real tab it
+           would keep the #experience hash and stay on that page — so
+           the reload is done in place instead: back to Home, chat
+           cleared, name retyped, opening question asked again, exactly
+           what a fresh page load shows. */
+        var brandBtn = document.getElementById("brandBtn");
+
         /* ---------- hero name typing ----------
            Starts only once the hero is actually on screen (page loaded,
            tab visible, heading in the viewport) and types slowly enough
@@ -717,6 +729,9 @@
         var buttons = Array.prototype.slice.call(document.querySelectorAll("#suggest button"));
         var busy = false;
         var asked = {};
+        /* bumped on every reload so a question that was mid-flight when
+           the reload hit cannot append its bubbles into the fresh chat */
+        var chatGen = 0;
 
         var ANSWERS = {
           who: '<p>I\u2019m RJ Mallik, a Software Development Engineer 1 at AWS.</p>' +
@@ -773,11 +788,14 @@
         function ask(key, label){
           if(busy) return;
           busy = true;
+          var gen = chatGen;
           buttons.forEach(function(b){ b.disabled = true; });
           var finish = function(){
+            if(gen !== chatGen) return;
             addUserBubble(label);
             var t = showTyping();
             setTimeout(function(){
+              if(gen !== chatGen){ t.remove(); return; }
               t.remove();
               addAiRow(ANSWERS[key]);
               asked[key] = true;
@@ -792,6 +810,7 @@
           input.value = "";
           var i = 0;
           (function step(){
+            if(gen !== chatGen) return;
             input.value = label.slice(0, ++i);
             if(i < label.length) setTimeout(step, 34);
             else setTimeout(function(){ input.value = ""; finish(); }, 260);
@@ -849,12 +868,38 @@
         navLinks.forEach(function(a){
           a.addEventListener("click", function(ev){
             ev.preventDefault();
-            showPage(a.getAttribute("data-page"), true);
+            var target = a.getAttribute("data-page");
+            /* clicking <Home> while already on Home is a reload too */
+            if(target === "home" && !pages.home.hidden){ reloadHome(); return; }
+            showPage(target, true);
           });
         });
         window.addEventListener("hashchange", function(){ showPage(pageFromHash(), false); });
         window.addEventListener("popstate", function(){ showPage(pageFromHash(), false); });
         showPage(pageFromHash(), false);
+
+        /* ---------- reload: <RJ>, or <Home> while already home ----------
+           Resets the home view in place so the click visibly does what a
+           reload should: back on Home (from Experience too), scrolled to
+           the top, chat emptied with every question pill back to its
+           un-asked state, the hero name retyped, and the opening
+           question asked again once the name lands. */
+        function resetChat(){
+          chatGen++;
+          busy = false;
+          asked = {};
+          body.innerHTML = "";
+          input.value = "";
+          buttons.forEach(function(b){ b.disabled = false; b.classList.remove("asked"); });
+          chatStarted = false;
+        }
+        function reloadHome(){
+          showPage("home", true);
+          resetChat();
+          if(nameState === "done") replayNameTyping();
+          startChatOnce();
+        }
+        if(brandBtn) brandBtn.addEventListener("click", reloadHome);
 
         /* ---------- timeline cards: tap / click toggles expansion (touch + keyboard) ---------- */
         var cards = Array.prototype.slice.call(document.querySelectorAll(".t-card"));
