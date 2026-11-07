@@ -227,11 +227,11 @@
          Small milestones are plain points with no
          card and nothing to expand. Major stops are cards showing only
          time + position collapsed, expanding on hover / focus / tap;
-         the hovered stop grows along the row. The timeline stays
-         horizontal on every screen size; on narrow screens the row
-         itself scrolls sideways so the spine never turns vertical. */
-      /* .htimeline is only the viewport (the sideways scroll box on
-         narrow screens); the row itself — flex layout, the reserved
+         the hovered stop grows along the row. On narrow screens
+         (phones) the same timeline stacks vertically instead: same
+         stops, order, dates, labels, and cards, with the spine
+         running top to bottom — see the max-width:980px block. */
+      /* .htimeline is only the viewport for the row; the row itself — flex layout, the reserved
          band above the spine, and the spine line + arrowhead — lives
          on the inner .tl-track. The spine MUST hang off the track,
          not the scroll box: an absolutely positioned line sizes
@@ -457,61 +457,86 @@
       }
 
       @media (max-width:980px){
-        /* stays horizontal at every width, as requested: the row keeps its
-           left-to-right spine and scrolls sideways inside its own track on
-           narrow screens instead of turning vertical. The page itself
-           never scrolls sideways. */
-        .htimeline{
-          overflow-x:auto;overflow-y:hidden;padding-bottom:14px;margin-top:14px;
-          -webkit-overflow-scrolling:touch;scrollbar-width:thin;
+        /* PHONE: the timeline stacks VERTICALLY. Same timeline, same
+           stops in the same order, same dates / times, same labels,
+           same card text — only the layout direction changes. The
+           spine turns from a left-to-right row into a top-to-bottom
+           line down the left gutter, each stop's dot sits on it, and
+           that stop's date, label, and card stack in place beside /
+           below the dot at full phone width. Nothing scrolls
+           sideways any more, and there is no long horizontal tail:
+           the spine is drawn per stop (see .t-item::before below),
+           so it always ends at the last dot, with only the same
+           short end cap — a stub of line plus the arrowhead, now
+           pointing down — in the gutter past the SDE 1 dot. */
+        .htimeline{overflow:visible;padding-bottom:0;margin-top:22px}
+        .tl-track{
+          flex-direction:column;width:auto;min-width:0;
+          gap:30px;padding-top:4px;padding-left:36px;
+          --tl-tail:0;
         }
-        /* the track stretches to the full width of all nine stops, so
-           the spine on it runs under every dot from Born to SDE 1
-           instead of ending one screen in. PHONE TAIL: the last
-           column's dot is no longer centred in its column (that alone
-           forced an 88px tail collapsed, 140px expanded — half the
-           column width past the dot to the track's right edge).
-           Instead the last dot sits near the track's right edge (see
-           the :last-child rules below), so the tail past the SDE 1
-           dot centre is just 24px in BOTH states, and the end cap
-           shrinks to match: the spine ends 18px past the dot centre
-           and a smaller 9px arrowhead tips 22px past it, welded onto
-           the line and inside the track edge. */
-        .tl-track{width:max-content;min-width:100%;gap:8px;--tl-tail:24px}
-        .tl-track::after{
-          right:calc(var(--tl-tail) - 22px);top:calc(var(--tl-top) + 4px);
-          border-left:9px solid var(--accent);border-top:4px solid transparent;border-bottom:4px solid transparent;
+        /* the horizontal spine + arrowhead belong to the row layout */
+        .tl-track::before,.tl-track::after{display:none}
+        /* vertical spine segment for each stop: runs from its dot
+           down through the stop and the gap to the next stop's dot
+           (which covers the join). The last stop gets only the short
+           orange end cap instead of a full segment. */
+        .t-item::before{
+          content:"";position:absolute;left:-21px;top:14px;bottom:-32px;
+          width:2px;border-radius:2px;background:var(--line);z-index:0;
         }
-        /* phone, last stop expanded: its column grows to 280px, but
-           its dot stays pinned 24px from the track's right edge (it
-           is right-aligned in its column, not centred), so the tail
-           does NOT grow back — still 24px */
-        .tl-track:has(> .t-item:last-child .t-card:hover),
-        .tl-track:has(> .t-item:last-child .t-card:focus-visible),
-        .tl-track:has(> .t-item:last-child .t-card.expanded){--tl-tail:24px}
-        /* last stop on phone: dot pinned near the right edge of its
-           column — the marker row right-aligns the 15px dot with
-           17px of padding, putting its centre 24.5px from the
-           track's right edge regardless of the column's width
-           (176px collapsed / 280px expanded). The up-arrow and the
-           date above the spine move with the dot so they stay
-           centred on it; the date is shifted a little further left
-           (translate -78%) so its right edge stays inside the track
-           instead of poking past it and re-adding scroll width.
-           The SDE 1 card keeps its full column width below — only
-           the dot's position inside the column changes, nothing is
-           shrunk or cut off. */
-        .tl-track > .t-item:last-child .t-marker{justify-content:flex-end;padding-right:17px}
-        .tl-track > .t-item:last-child .t-arrow{left:calc(100% - 24px)}
-        .tl-track > .t-item:last-child .t-date-top{left:calc(100% - 24px);transform:translate(-78%,-100%)}
-        .t-item{flex:0 0 176px}
-        .t-item.milestone{flex:0 0 84px}
-        .t-item:has(.t-card:hover),.t-item:has(.t-card:focus-visible),.t-item:has(.t-card.expanded){flex:0 0 280px}
-        /* degree column stays 176px on narrow screens too; its window
-           still overlays on top and reaches 4 x 176px + 50px = 754px
-           wide, ending after the intern position, before the SDE 1 dot */
-        .t-item.degree:has(.t-card:hover),.t-item.degree:has(.t-card:focus-visible),.t-item.degree:has(.t-card.expanded){flex:0 0 176px}
-        .t-card{padding:14px 16px}
+        .t-item:first-child::before{background:linear-gradient(to bottom,var(--accent),var(--line) 72px)}
+        .t-item:last-child::before{bottom:auto;height:24px;background:var(--accent)}
+        .t-item:last-child::after{
+          content:"";position:absolute;left:-25px;top:36px;z-index:0;
+          border-left:5px solid transparent;border-right:5px solid transparent;border-top:9px solid var(--accent);
+        }
+        /* every stop: full width, stacked in its original order,
+           no flex growth on hover / expand (that was row behaviour) */
+        .t-item,.t-item.milestone,.t-item.exp,.t-item.degree,
+        .t-item:has(.t-card:hover),.t-item:has(.t-card:focus-visible),.t-item:has(.t-card.expanded),
+        .t-item.degree:has(.t-card:hover),.t-item.degree:has(.t-card:focus-visible),.t-item.degree:has(.t-card.expanded){
+          flex:none;width:100%;min-width:0;
+          display:flex;flex-direction:column;align-items:flex-start;gap:6px;
+        }
+        /* dot pinned on the vertical spine in the left gutter,
+           aligned with the stop's first line (its date / label) */
+        .t-marker{
+          position:absolute;left:-28px;top:3px;z-index:1;
+          width:15px;height:15px;display:flex;justify-content:center;align-items:center;
+        }
+        .tl-track > .t-item:last-child .t-marker{justify-content:center;padding-right:0}
+        /* the up-arrows were connectors for the horizontal layout
+           (card below the spine, arrow up to the dot); in the stack
+           the card sits right under its date, so they are dropped */
+        .t-arrow,.degree-arrow{display:none}
+        /* dates and labels come off their absolute perch above the
+           horizontal spine and stack in place, left-aligned, in the
+           same order they had: label / date for the milestones,
+           date then card for the degree and experience stops */
+        .t-top-label{
+          position:static;transform:none;width:auto;max-width:none;
+          text-align:left;order:1;
+        }
+        .t-date{grid-area:auto;text-align:left;order:2;margin:0}
+        .t-item.degree .t-date{order:1}
+        .t-date-top{
+          position:static;transform:none;width:auto;max-width:none;
+          text-align:left;order:1;margin:0;
+        }
+        .tl-track > .t-item:last-child .t-date-top{left:auto;transform:none}
+        .t-content{grid-area:auto;width:100%;order:3}
+        .t-item.degree .t-content,.t-item.exp .t-content{order:2}
+        /* the degree card lifts out of its overlay band above the
+           horizontal spine and sits in the stack like every other
+           card: in place under its date, full width, no widening
+           to the right on expand */
+        .t-item.degree .t-card,
+        .t-item.degree .t-card:hover,.t-item.degree .t-card:focus-visible,.t-item.degree .t-card.expanded{
+          position:static;width:auto;max-width:none;
+        }
+        .t-item.degree .t-card h3{white-space:normal}
+        .t-card{padding:14px 16px;width:100%}
         .t-card h3{font-size:16px}
       }
       @media (max-width:560px){
@@ -535,8 +560,8 @@
          that opens it — small phones (320px and up), large phones,
          foldables, tablets, landscape phones, and notched devices —
          not just the one phone width it was tuned on:
-         - the PAGE never scrolls sideways on any device (only the
-           timeline row scrolls, inside its own box, by design);
+         - the PAGE never scrolls sideways on any device (on phones
+           the timeline stacks vertically, so nothing needs to);
            overflow-x:clip is used rather than hidden so the sticky
            top bar keeps sticking where clip is supported;
          - notched phones get their safe-area insets added to the
