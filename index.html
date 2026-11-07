@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="data:," />
-    <title>RJ Mallik — SDE @ AWS Transit Gateway</title>
+    <title>RJ Mallik</title>
     <meta name="description" content="RJ Mallik is a Software Development Engineer 1 on AWS Transit Gateway (Routing). UC Santa Cruz honors, double major in Computer Science and Mathematics." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -222,7 +222,7 @@
          only its top line collapsed and expands on hover / focus / tap,
          because the degree runs underneath the teaching and research
          stops that sit below it on the timeline. The band is reserved with
-         padding-top on .htimeline (--tl-top), and the spine line and
+         padding-top on .tl-track (--tl-top), and the spine line and
          arrow are offset by the same amount so they stay on the dots.
          Small milestones are plain points with no
          card and nothing to expand. Major stops are cards showing only
@@ -230,16 +230,29 @@
          the hovered stop grows along the row. The timeline stays
          horizontal on every screen size; on narrow screens the row
          itself scrolls sideways so the spine never turns vertical. */
-      .htimeline{
+      /* .htimeline is only the viewport (the sideways scroll box on
+         narrow screens); the row itself — flex layout, the reserved
+         band above the spine, and the spine line + arrowhead — lives
+         on the inner .tl-track. The spine MUST hang off the track,
+         not the scroll box: an absolutely positioned line sizes
+         itself against its containing block, and against the scroll
+         box that is one screen width, so on a phone the line stopped
+         after the first screen, wore its end arrow there, and every
+         stop past it lost its line — the timeline "disappeared".
+         Against the track (full content width) the line spans the
+         whole timeline: orange at both edges, grey in the middle,
+         blended between, with every dot sitting on it. */
+      .htimeline{position:relative;margin:10px 0 10px}
+      .tl-track{
         --tl-top:236px;
-        position:relative;margin:10px 0 10px;padding-top:var(--tl-top);
+        position:relative;padding-top:var(--tl-top);
         display:flex;gap:10px;align-items:flex-start;
       }
-      .htimeline::before{
+      .tl-track::before{
         content:"";position:absolute;left:4px;right:14px;top:calc(var(--tl-top) + 7px);height:2px;border-radius:2px;
         background:linear-gradient(to right,var(--accent),var(--line) 16%,var(--line) 84%,var(--accent));
       }
-      .htimeline::after{
+      .tl-track::after{
         content:"";position:absolute;right:0;top:calc(var(--tl-top) + 3px);
         border-left:11px solid var(--accent);border-top:5px solid transparent;border-bottom:5px solid transparent;
       }
@@ -404,6 +417,10 @@
           overflow-x:auto;overflow-y:hidden;padding-bottom:14px;margin-top:14px;
           -webkit-overflow-scrolling:touch;scrollbar-width:thin;
         }
+        /* the track stretches to the full width of all nine stops, so
+           the spine on it runs under every dot from Born to SDE 1
+           instead of ending one screen in */
+        .tl-track{width:max-content;min-width:100%}
         .t-item{flex:0 0 196px}
         .t-item.milestone{flex:0 0 108px}
         .t-item:has(.t-card:hover),.t-item:has(.t-card:focus-visible),.t-item:has(.t-card.expanded){flex:0 0 300px}
@@ -492,6 +509,7 @@
         </div>
 
         <div class="htimeline" id="htimeline">
+        <div class="tl-track">
 
           <div class="t-item milestone">
             <span class="t-marker" aria-hidden="true"><i></i></span>
@@ -579,7 +597,7 @@
                 <div class="t-details">
                   <p class="t-org">Amazon Web Services · Transit Gateway</p>
                   <ul>
-                    <li>Built a <strong>modular chaos engineering framework</strong> for Transit Gateway routing, so fault-injection tests could be composed and reused across data paths instead of written one-off.</li>
+                    <li>Built a <strong>modular chaos engineering framework</strong> for Transit Gateway routing, so different kinds of fault-injection tests could be composed and reused across data paths instead of written one-off.</li>
                   </ul>
                 </div>
               </article>
@@ -606,6 +624,7 @@
             </div>
           </div>
 
+        </div>
         </div>
       </div>
     </div>
