@@ -1,85 +1,867 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>RUTUJIT(RJ)</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="PersonalWebsite.css">
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>RJ Mallik — SDE @ AWS Transit Gateway</title>
+    <meta name="description" content="RJ Mallik is a Software Development Engineer 1 on AWS Transit Gateway (Routing). UC Santa Cruz honors, double major in Computer Science and Mathematics." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#fafaf8;
+        --surface:#ffffff;
+        --surface-2:#f1f0ec;
+        --ink:#141412;
+        --ink-2:#55534d;
+        --ink-3:#8a877f;
+        --line:#e3e1da;
+        --bubble-user:#e9e7e1;
+        --bubble-user-ink:#141412;
+        --bubble-ai:#141412;
+        --bubble-ai-ink:#f5f4f0;
+        --accent:#e8590c;
+        --accent-soft:#fdeee3;
+        --pill-bg:#ffffff;
+        --pill-line:#d8d5cd;
+        --chat-bg:#f5f4ef;
+        --chat-head-bg:#eae8e0;
+        --shadow:0 1px 2px rgba(20,20,18,.04),0 12px 32px -12px rgba(20,20,18,.12);
+        color-scheme:light;
+      }
+      html[data-theme="dark"]{
+        --bg:#101010;
+        --surface:#171717;
+        --surface-2:#1e1e1e;
+        --ink:#f2f1ed;
+        --ink-2:#b3b0a8;
+        --ink-3:#7d7a73;
+        --line:#2a2a2a;
+        --bubble-user:#262626;
+        --bubble-user-ink:#f2f1ed;
+        --bubble-ai:#f2f1ed;
+        --bubble-ai-ink:#141412;
+        --accent:#ff922b;
+        --accent-soft:#2b1c10;
+        --pill-bg:#1c1c1c;
+        --pill-line:#333331;
+        --chat-bg:#131313;
+        --chat-head-bg:#0f0f0f;
+        --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px -12px rgba(0,0,0,.5);
+        color-scheme:dark;
+      }
+      @media (prefers-color-scheme:dark){
+        html:not([data-theme="light"]){
+          --bg:#101010;--surface:#171717;--surface-2:#1e1e1e;--ink:#f2f1ed;--ink-2:#b3b0a8;--ink-3:#7d7a73;
+          --line:#2a2a2a;--bubble-user:#262626;--bubble-user-ink:#f2f1ed;--bubble-ai:#f2f1ed;--bubble-ai-ink:#141412;
+          --accent:#ff922b;--accent-soft:#2b1c10;--pill-bg:#1c1c1c;--pill-line:#333331;
+          --chat-bg:#131313;--chat-head-bg:#0f0f0f;
+          --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px -12px rgba(0,0,0,.5);color-scheme:dark;
+        }
+      }
+      *{box-sizing:border-box}
+      html{scroll-behavior:smooth}
+      body{
+        margin:0;background:var(--bg);color:var(--ink);
+        font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        -webkit-font-smoothing:antialiased;line-height:1.55;
+        transition:background .25s ease,color .25s ease;
+        /* flex column so the footer can be pushed to the bottom of the page */
+        display:flex;flex-direction:column;min-height:100vh;min-height:100dvh;
+      }
+      .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+      a{color:inherit}
 
-</head>
-<body>
-  <header>
-    <div style="text-align: left; margin-left: 30px;">
-      <h2 style="margin-top: -5px; margin-left: 50px; font-size: 60px;">Relevant Courses</h2>
-      <p class="instruction-text" style="color: white; margin-top: -25px; margin-left: 50px;"><em>Click on an institution then<br>hover over bubbles for more information on the course*</em></p>
+      /* ---------- top bar ---------- */
+      .topbar{
+        position:sticky;top:0;z-index:20;
+        display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;
+        padding:14px 22px;
+        background:color-mix(in srgb,var(--bg) 88%,transparent);
+        backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+        border-bottom:1px solid transparent;
+      }
+      .theme-btn{
+        justify-self:start;
+        display:inline-flex;align-items:center;gap:8px;
+        background:none;border:1px solid var(--line);border-radius:999px;
+        padding:6px 12px 6px 9px;cursor:pointer;color:var(--ink-2);
+        font-family:"IBM Plex Mono",monospace;font-size:12px;
+      }
+      .theme-btn:hover{border-color:var(--ink-3);color:var(--ink)}
+      .theme-btn svg{width:15px;height:15px;flex:none}
+      .brand{justify-self:center;text-align:center;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink)}
+      .brand b{color:var(--ink);font-weight:700}
+      nav.main{display:flex;gap:4px;justify-self:end}
+      nav.main a{
+        font-family:"IBM Plex Mono",monospace;font-size:13px;text-decoration:none;color:var(--ink-2);
+        padding:6px 10px;border-radius:8px;
+      }
+      nav.main a:hover{color:var(--ink);background:var(--surface-2)}
+      nav.main a.active{color:var(--ink);background:var(--surface-2);box-shadow:inset 0 -2px 0 var(--accent)}
+
+      .wrap{max-width:760px;margin:0 auto;padding:0 22px}
+      .wrap-wide{max-width:1160px}
+      .page[hidden]{display:none}
+
+      /* ---------- hero ---------- */
+      .hero{padding:72px 0 24px;text-align:center}
+      .hero h1{
+        margin:0;font-size:clamp(56px,11vw,104px);line-height:.98;font-weight:700;letter-spacing:-.03em;
+        min-height:1em;text-align:center;
+      }
+      .cursor{display:inline-block;width:.09em;height:.82em;background:var(--accent);margin-left:.06em;vertical-align:-.06em;animation:blink 1s steps(1) infinite}
+      @keyframes blink{50%{opacity:0}}
+      .hero .role{margin:18px 0 0;font-size:clamp(17px,2.6vw,20px);color:var(--ink);font-weight:500}
+      .hero .role .at{color:var(--accent)}
+      .hero .sub{margin:6px 0 0;font-size:15px;color:var(--ink-2)}
+      .hero .hint{margin:26px 0 0;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-3)}
+      .hero .hint::before{content:"↓  ";color:var(--accent)}
+
+      /* ---------- chat ---------- */
+      section{padding:72px 0 8px}
+      .sec-label{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 16px}
+      .chat{
+        background:var(--chat-bg);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+        overflow:hidden;
+      }
+      .chat-head{
+        display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line);
+        background:var(--chat-head-bg);
+      }
+      .dots{display:flex;gap:6px;justify-self:start}
+      .dots i{width:10px;height:10px;border-radius:50%;background:var(--line);display:block}
+      .dots i:first-child{background:#e0655a}.dots i:nth-child(2){background:#e8b34b}.dots i:nth-child(3){background:#57ab5a}
+      .chat-head .title{font-family:"IBM Plex Mono",monospace;font-size:13.5px;font-weight:400;letter-spacing:.02em;color:var(--ink);text-align:center;justify-self:center}
+      .chat-head .live{justify-self:end;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+      .chat-head .live::before{content:"";width:7px;height:7px;border-radius:50%;background:#57ab5a}
+      .chat-body{padding:22px 18px 10px;display:flex;flex-direction:column;gap:14px;min-height:180px}
+      .msg{max-width:88%;padding:11px 15px;border-radius:14px;font-size:15px;line-height:1.55;overflow-wrap:anywhere}
+      .msg.user{align-self:flex-end;background:var(--bubble-user);color:var(--bubble-user-ink);border-bottom-right-radius:4px;font-family:"IBM Plex Mono",monospace;font-size:13.5px}
+      .msg.ai{align-self:flex-start;background:var(--bubble-ai);color:var(--bubble-ai-ink);border-bottom-left-radius:4px}
+      .msg.ai p{margin:0 0 8px}.msg.ai p:last-child{margin-bottom:0}
+      .msg.ai ul{margin:4px 0 0;padding-left:18px}.msg.ai li{margin:3px 0}
+      .msg.ai b,.msg.ai strong{font-weight:700}
+      .msg-row{display:flex;align-items:flex-end;gap:9px;align-self:flex-start;max-width:92%}
+      .msg-row .msg{max-width:100%}
+      .avatar{
+        flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;
+        display:flex;align-items:center;justify-content:center;
+        font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;margin-bottom:2px;
+      }
+      .typing{display:inline-flex;gap:5px;padding:14px 16px}
+      .typing i{width:7px;height:7px;border-radius:50%;background:var(--bubble-ai-ink);opacity:.45;display:block;animation:tp 1.1s infinite}
+      .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+      @keyframes tp{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-4px);opacity:.9}}
+      .fade-in{animation:fadeIn .3s ease both}
+      @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+      .skill-pills{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+      .skill-pills span{
+        font-family:"IBM Plex Mono",monospace;font-size:12px;padding:4px 10px;border-radius:999px;
+        background:var(--accent-soft);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+      }
+      html[data-theme="dark"] .msg.ai .skill-pills span{background:#3a2413;color:#ffb26b}
+
+      .suggest{padding:6px 18px 14px;display:flex;flex-wrap:wrap;gap:8px}
+      .suggest button{
+        font-family:"IBM Plex Mono",monospace;font-size:12.5px;cursor:pointer;
+        background:var(--pill-bg);color:var(--ink-2);border:1px solid var(--pill-line);
+        border-radius:999px;padding:7px 14px;transition:border-color .15s,color .15s;
+      }
+      .suggest button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+      .suggest button:disabled{opacity:.45;cursor:default}
+      .suggest button.asked{border-color:var(--line);color:var(--ink-3)}
+
+      .chat-input{
+        display:flex;align-items:center;gap:10px;margin:0 14px 14px;padding:11px 14px;
+        border:1px solid var(--line);border-radius:12px;background:var(--surface-2);
+      }
+      .chat-input .prompt-mark{color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:14px;flex:none}
+      .chat-input input{
+        flex:1;min-width:0;border:0;background:none;outline:none;color:var(--ink);
+        font-family:"IBM Plex Mono",monospace;font-size:13.5px;
+      }
+      .chat-input input::placeholder{color:var(--ink-3)}
+      .send{
+        flex:none;width:30px;height:30px;border-radius:8px;border:0;background:var(--ink);color:var(--bg);
+        display:flex;align-items:center;justify-content:center;cursor:default;
+      }
+      .send svg{width:14px;height:14px}
+
+      /* ---------- experience page ---------- */
+      .exp-hero{padding:56px 0 6px}
+      .exp-hero h2{margin:0;font-size:clamp(40px,6.5vw,64px);line-height:1.02;font-weight:400;letter-spacing:-.03em}
+      .exp-hero .lede{margin:14px 0 0;font-size:16px;color:var(--ink-2);max-width:560px}
+      .exp-hero .hint{margin:20px 0 0;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-3)}
+      /* outside-of-work note: a different font from the sans heading
+         above it and the mono hint below it — a plain serif, with
+         nothing italic and nothing bold, per RJ's note */
+      .exp-hero .outside{
+        margin:16px 0 0;max-width:600px;
+        font-family:"Newsreader",Georgia,"Times New Roman",serif;font-style:normal;font-weight:400;
+        font-size:17.5px;line-height:1.6;color:var(--ink-2);
+      }
+
+      /* ---------- horizontal timeline, 2004 -> present ----------
+         One spine running left to right through every point, in order:
+         Born 2004, elementary 2010, middle 2015, high school 2018,
+         B.S. 2022-2026, Think Academy, researcher, intern, SDE 1.
+         Education is a point ON the spine (a dot like every other stop),
+         but its card is special: it sits ON TOP OF the timeline — in a
+         reserved band above the spine, anchored at the B.S. dot — and
+         stretches wide to the right when expanded, ending past the
+         intern stop (see .t-item.degree). Like the other cards it shows
+         only its top line collapsed and expands on hover / focus / tap,
+         because the degree runs underneath the teaching and research
+         stops that sit below it on the timeline. The band is reserved with
+         padding-top on .htimeline (--tl-top), and the spine line and
+         arrow are offset by the same amount so they stay on the dots.
+         Small milestones are plain points with no
+         card and nothing to expand. Major stops are cards showing only
+         time + position collapsed, expanding on hover / focus / tap;
+         the hovered stop grows along the row. The timeline stays
+         horizontal on every screen size; on narrow screens the row
+         itself scrolls sideways so the spine never turns vertical. */
+      .htimeline{
+        --tl-top:236px;
+        position:relative;margin:10px 0 10px;padding-top:var(--tl-top);
+        display:flex;gap:10px;align-items:flex-start;
+      }
+      .htimeline::before{
+        content:"";position:absolute;left:4px;right:14px;top:calc(var(--tl-top) + 7px);height:2px;border-radius:2px;
+        background:linear-gradient(to right,var(--accent),var(--line) 16%,var(--line) 84%,var(--accent));
+      }
+      .htimeline::after{
+        content:"";position:absolute;right:0;top:calc(var(--tl-top) + 3px);
+        border-left:11px solid var(--accent);border-top:5px solid transparent;border-bottom:5px solid transparent;
+      }
+      .t-item{
+        position:relative;flex:1.18 1 0;min-width:0;
+        display:grid;grid-template-rows:16px minmax(36px,auto) 1fr;row-gap:8px;
+        grid-template-areas:"dot" "date" "content";
+        transition:flex .45s cubic-bezier(.22,.8,.3,1);
+      }
+      .t-item.milestone{flex:.62 1 0}
+      .t-item:has(.t-card:hover),.t-item:has(.t-card:focus-visible),.t-item:has(.t-card.expanded){flex:2.4 1 0}
+      /* Degree stop is the exception: its column never grows, so the
+         neighbouring columns keep their widths and dot positions. Its
+         card lifts OUT of the row and sits ON TOP OF the timeline, in
+         the reserved band above the spine: absolutely positioned
+         against its own column (bottom:100% + a small gap above the
+         dot), anchored at the B.S. dot. Collapsed it shows ONLY the
+         top line — the degree title — at a width that fits that line.
+         On hover / focus / tap it expands like the other cards and
+         stretches wide to the right: 4 major-column widths (B.S. ->
+         Think Academy -> Researcher -> Intern) + the gaps between
+         those columns + 20px more, folded into the +50px below, so
+         its right edge lands past the intern column while still
+         stopping short of the SDE 1 dot. There is no B.S. box below
+         the spine; a small arrow in the gap points down to the dot. */
+      .t-item.degree{position:relative;z-index:2}
+      .t-item.degree:has(.t-card:hover),.t-item.degree:has(.t-card:focus-visible),.t-item.degree:has(.t-card.expanded){flex:1.18 1 0;z-index:30}
+      .t-item.degree .t-card{
+        position:absolute;left:0;bottom:calc(100% + 52px);z-index:40;
+        width:340px;max-width:none;cursor:pointer;
+        box-shadow:0 2px 4px rgba(20,20,18,.06),0 24px 48px -12px rgba(20,20,18,.28);
+        transition:border-color .2s ease,width .45s cubic-bezier(.22,.8,.3,1);
+      }
+      .t-item.degree .t-card:hover,.t-item.degree .t-card:focus-visible,.t-item.degree .t-card.expanded{width:calc(400% + 50px)}
+      .t-item.degree .t-card h3{white-space:nowrap}
+      /* simple arrow from the degree card down to its dot: a short
+         stem centred on the dot with a small triangle head */
+      .degree-arrow{
+        position:absolute;left:50%;top:-52px;transform:translateX(-50%);
+        width:2px;height:44px;background:var(--accent);z-index:41;pointer-events:none;
+      }
+      .degree-arrow::after{
+        content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);
+        border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--accent);
+      }
+      /* small simple arrow for the EXPERIENCE stops only (not the
+         pre-college milestones, and the degree keeps its own arrow):
+         NO arrow comes from the top of the timeline — above the spine
+         there is only the date / time for each experience stop. The
+         arrow sits BELOW the spine instead: it rises out of the top
+         of the experience card / block below and points UP to that
+         stop's dot, so it reads as pointing from the experience
+         context to its dot. A short accent stem centred on the dot,
+         with a small triangle head at its top touching the dot. */
+      .t-arrow{
+        position:absolute;left:50%;top:24px;transform:translateX(-50%);
+        width:2px;height:14px;background:var(--accent);z-index:0;pointer-events:none;
+      }
+      .t-arrow::after{
+        content:"";position:absolute;left:50%;bottom:100%;transform:translateX(-50%);
+        border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:6px solid var(--accent);
+      }
+      /* pre-college milestones are split across the spine as two
+         separate lines: what he was doing (Born, Elementary school,
+         Middle school, High school) sits ON TOP, above the spine,
+         centred on the dot, with NO arrow; the time / year sits on
+         the BOTTOM, below the spine, in the normal date row. */
+      .t-top-label{
+        position:absolute;left:50%;top:-14px;transform:translate(-50%,-100%);
+        width:max-content;max-width:92px;text-align:center;z-index:2;
+        margin:0;font-size:13.5px;line-height:1.35;color:var(--ink);
+      }
+      /* experience stops (not the degree): only the date / time sits
+         ON TOP, above the spine, centred on the dot — no arrow up
+         there at all — and pulled in close to the dot, the same tight
+         spacing the rest of the timeline uses, so the time reads as
+         belonging to its dot instead of floating above it. The card
+         itself stays below, with the small arrow in the gap between
+         card and spine pointing up to the dot, so the item's grid
+         collapses to just dot + content and the row gap leaves room
+         for that arrow. */
+      .t-item.exp{grid-template-rows:16px 1fr;grid-template-areas:"dot" "content";row-gap:28px}
+      .t-date-top{
+        position:absolute;left:50%;top:-10px;transform:translate(-50%,-100%);
+        width:max-content;max-width:132px;text-align:center;z-index:2;
+        margin:0;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;line-height:1.5;color:var(--accent);
+      }
+      .t-marker{grid-area:dot;display:flex;justify-content:center;align-items:center;position:relative;z-index:1}
+      .t-marker i{
+        display:block;width:15px;height:15px;border-radius:50%;flex:none;
+        background:var(--bg);border:2.5px solid var(--accent);
+        transition:background .2s ease;
+      }
+      .t-item.milestone .t-marker i{width:9px;height:9px;border:none;background:var(--ink-3)}
+      .t-item:has(.t-card:hover) .t-marker i,.t-item:has(.t-card:focus-visible) .t-marker i,.t-item:has(.t-card.expanded) .t-marker i{background:var(--accent)}
+      .t-date{
+        grid-area:date;margin:0;text-align:center;
+        font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;line-height:1.5;color:var(--accent);
+      }
+      .t-item.milestone .t-date{color:var(--ink-3);font-size:12px}
+      .t-content{grid-area:content;min-width:0}
+      .t-label{margin:0;text-align:center;font-size:13.5px;font-weight:400;color:var(--ink-2);line-height:1.45}
+      .t-label b{color:var(--ink);font-weight:400}
+      .t-card{
+        background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+        padding:14px 15px;cursor:pointer;outline:none;transition:border-color .2s ease;
+      }
+      .t-card:hover,.t-card:focus-visible,.t-card.expanded{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+      .t-card h3{margin:0;font-size:15.5px;font-weight:400;letter-spacing:-.01em;line-height:1.32}
+      .t-org{margin:0 0 8px;font-size:13.5px;color:var(--ink);font-weight:400;line-height:1.45}
+      .t-details{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,.8,.3,1),opacity .3s ease,margin .3s ease;margin-top:0}
+      .t-card:hover .t-details,.t-card:focus-visible .t-details,.t-card.expanded .t-details{max-height:1200px;opacity:1;margin-top:12px}
+      .t-details p{margin:0 0 8px;color:var(--ink-2);font-size:13.5px;line-height:1.55}
+      .t-details ul{margin:0;padding-left:17px;color:var(--ink-2);font-size:13.5px;line-height:1.55}
+      .t-details li{margin:5px 0}
+      .t-details li b,.t-details p b,.t-details li strong,.t-details p strong{color:var(--ink);font-weight:700}
+      .exp-note{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);margin:18px 0 0}
+
+      /* footer sits in its own subsection, cut off from the content above by a divider line.
+         The footer itself is full-bleed (outside .wrap) so its top border stretches
+         edge-to-edge across the whole viewport on any screen size; only the
+         inner content stays constrained to the centred column. */
+      footer{
+        width:100%;
+        border-top:1px solid var(--line);
+        /* compact footer, pushed to the bottom of the page: margin-top:auto
+           inside the body's flex column pins it to the bottom on short pages
+           and lets it sit right after the content on long ones */
+        padding:26px 0 18px;margin-top:auto;text-align:center;
+      }
+      /* breathing room above the pushed-down footer on long pages */
+      .page{padding-bottom:40px}
+      footer .wrap{max-width:760px;margin:0 auto}
+      footer .socials{display:flex;flex-wrap:wrap;gap:13px;align-items:center;justify-content:center}
+      footer .social-btn{
+        width:46px;height:46px;border-radius:11px;flex:none;
+        background:var(--surface-2);color:var(--ink-2);
+        display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+        transition:background .18s ease,color .18s ease,transform .18s ease;
+      }
+      footer .social-btn:hover,footer .social-btn:focus-visible{color:var(--ink);background:var(--line);transform:translateY(-2px)}
+      footer .social-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+      footer .social-btn svg{width:23px;height:23px;display:block}
+      footer .copyright{
+        margin:13px 0 0;font-family:"IBM Plex Mono",monospace;font-size:14px;letter-spacing:.01em;color:var(--ink-3);
+      }
+      @media (max-width:560px){
+        footer .socials{gap:11px}
+        footer .social-btn{width:46px;height:46px;border-radius:11px}
+        footer .social-btn svg{width:23px;height:23px}
+        footer .copyright{font-size:13.5px}
+      }
+
+      @media (max-width:980px){
+        /* stays horizontal at every width, as requested: the row keeps its
+           left-to-right spine and scrolls sideways inside its own track on
+           narrow screens instead of turning vertical. The page itself
+           never scrolls sideways. */
+        .htimeline{
+          overflow-x:auto;overflow-y:hidden;padding-bottom:14px;margin-top:14px;
+          -webkit-overflow-scrolling:touch;scrollbar-width:thin;
+        }
+        .t-item{flex:0 0 196px}
+        .t-item.milestone{flex:0 0 108px}
+        .t-item:has(.t-card:hover),.t-item:has(.t-card:focus-visible),.t-item:has(.t-card.expanded){flex:0 0 300px}
+        /* degree column stays 196px on narrow screens too; its window
+           still overlays on top and reaches 4 x 196px + 50px = 834px
+           wide, ending after the intern position, before the SDE 1 dot */
+        .t-item.degree:has(.t-card:hover),.t-item.degree:has(.t-card:focus-visible),.t-item.degree:has(.t-card.expanded){flex:0 0 196px}
+        .t-card{padding:14px 16px}
+        .t-card h3{font-size:16px}
+      }
+      @media (max-width:560px){
+        .topbar{padding:12px 16px}
+        .brand{display:none}
+        .wrap{padding:0 16px}
+        .hero{padding-top:56px;padding-bottom:24px}
+        .exp-hero{padding-top:40px}
+        .msg{max-width:94%}
+        .msg-row{max-width:98%}
+        nav.main a{padding:6px 7px;font-size:12.5px}
+      }
+      @media (prefers-reduced-motion:reduce){
+        html{scroll-behavior:auto}
+        .cursor,.typing i,.fade-in{animation:none}
+        .t-card,.t-details,.t-marker i,.t-item{transition:none}
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle dark mode">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <span id="themeLabel">dark</span>
+      </button>
+      <span class="brand">&lt;RJ&gt;</span>
+      <nav class="main" aria-label="Pages">
+        <a href="#home" data-page="home" class="active">&lt;Home&gt;</a>
+        <a href="#experience" data-page="experience">&lt;Experience&gt;</a>
+      </nav>
+    </header>
+
+    <!-- ================= PAGE: HOME ================= -->
+    <div class="page" id="page-home">
+      <div class="wrap">
+        <div class="hero">
+          <h1 aria-label="RJ Mallik"><span id="typedName" aria-hidden="true"></span><span class="cursor" aria-hidden="true"></span></h1>
+        </div>
+
+        <section aria-label="About me">
+          <div class="chat" id="chat">
+            <div class="chat-head">
+              <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="title">About Me</span>
+              <span class="live">online</span>
+            </div>
+            <div class="chat-body" id="chatBody" aria-live="polite"></div>
+            <div class="suggest" id="suggest">
+              <button type="button" data-q="who">who are you?</button>
+              <button type="button" data-q="now">what are you working on right now?</button>
+              <button type="button" data-q="aws">what do you do at AWS?</button>
+              <button type="button" data-q="study">where did you study?</button>
+              <button type="button" data-q="before">what did you do before?</button>
+              <button type="button" data-q="research">what was your undergraduate research about?</button>
+              <button type="button" data-q="languages">what languages do you know?</button>
+              <button type="button" data-q="frameworks">what frameworks and tools do you use?</button>
+              <button type="button" data-q="systems">what systems and cloud skills do you have?</button>
+              <button type="button" data-q="projects">do you have personal projects?</button>
+            </div>
+            <div class="chat-input">
+              <span class="prompt-mark">›</span>
+              <input id="chatInput" type="text" readonly placeholder="Ask about RJ…" aria-label="Chat prompt (scripted — pick a question above)" />
+              <span class="send" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              </span>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
-    <a href="FHSCourses.html" class="link img" target="_blank">
-      <img class="rounded-logo" src="FHSlogo.png" alt="Foothill Logo" style="margin-top: 20px;margin-left: 100px; width: 200px; height: 200px;">
-    </a>
-    <a href="UMCoursera.html" class="link img" target="_blank">
-      <img class="rounded-logo" src="https://brand.umich.edu/assets/brand/style-guide/logo-guidelines/U-M_Logo-Hex.png" alt="University of Michigan Logo" style="margin-top: 20px;margin-left: 60px; width: 200px; height: 200px;">
-    </a>
-    <a href="UCSCClasses.html" class="link img" target="_blank">
-      <img class="rounded-logo" src="SLogo.jpeg" alt="UCSC Logo" style="margin-top: 20px;margin-left: 60px; width: 200px; height: 200px;">
-    </a>
-  </header>
 
-<section>
-  <nav>
-    <h3 style="font-size: 30px; margin-top: 10px;">Other Related Links</h3>
-    <ul>
-      <div class="clearfix">
-        <div class="img-container-logos">
-          <a href="https://www.linkedin.com/in/rutujit-mallikarjuna/">
-          <img class="rounded-logo" src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn Logo" width="75" height="75">
-        </a>
+    <!-- ================= PAGE: EXPERIENCE ================= -->
+    <div class="page" id="page-experience" hidden>
+      <div class="wrap wrap-wide">
+        <div class="exp-hero">
+          <h2>Where I&rsquo;ve been</h2>
+          <p class="outside">Outside of work, I enjoy playing basketball and watching all kinds of sports. I am a big media head as well, enjoying video games, TV, movies, and books.</p>
+          <p class="hint">hover to expand; tap if on a touchscreen</p>
         </div>
-        <div class="img-container-logos">
-          <a href="file:///Users/rutujit/Desktop/Job%20Application%20Stuff/OfficialResume-RJ%20publicV.pdf">
-          <img class="rounded-logo" src="https://t3.ftcdn.net/jpg/04/75/01/06/360_F_475010683_QcMoX9EuZkjVToNNtXCDbejMo4tIj06i.jpg" alt="Resume Logo" width="75" height="75" style=>
-        </a>
+
+        <div class="htimeline" id="htimeline">
+
+          <div class="t-item milestone">
+            <span class="t-marker" aria-hidden="true"><i></i></span>
+            <p class="t-date">2004</p>
+            <p class="t-top-label">Born</p>
+          </div>
+
+          <div class="t-item milestone">
+            <span class="t-marker" aria-hidden="true"><i></i></span>
+            <p class="t-date">2010</p>
+            <p class="t-top-label">Elementary<br />school</p>
+          </div>
+
+          <div class="t-item milestone">
+            <span class="t-marker" aria-hidden="true"><i></i></span>
+            <p class="t-date">2015</p>
+            <p class="t-top-label">Middle<br />school</p>
+          </div>
+
+          <div class="t-item milestone">
+            <span class="t-marker" aria-hidden="true"><i></i></span>
+            <p class="t-date">2018</p>
+            <p class="t-top-label">High<br />school</p>
+          </div>
+
+          <div class="t-item degree">
+            <p class="t-date">SEP 2022 —<br />MAR 2026</p>
+            <span class="t-marker" aria-hidden="true"><i></i></span>
+            <span class="degree-arrow" aria-hidden="true"></span>
+            <div class="t-content">
+              <article class="t-card" tabindex="0">
+                <h3>B.S. Computer Science + Mathematics</h3>
+                <div class="t-details">
+                  <p class="t-org">University of California, Santa Cruz — graduated with honors</p>
+                  <p><strong>Double major</strong> in Computer Science and Mathematics (Theory &amp; Computation), <strong>graduated with honors</strong>.</p>
+                  <p>This runs underneath the teaching and research below — both happened during the degree.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="t-item exp">
+            <p class="t-date-top">JUN 2024 –<br />NOV 2024</p>
+            <span class="t-marker" aria-hidden="true"><i></i></span>
+            <span class="t-arrow" aria-hidden="true"></span>
+            <div class="t-content">
+              <article class="t-card" tabindex="0">
+                <h3>Math Instructor · Think Academy</h3>
+                <div class="t-details">
+                  <p class="t-org">Think Academy</p>
+                  <ul>
+                    <li>Taught Mathematics and tutored Mathematics and Computer Science to students of all ages, up to the college level.</li>
+                  </ul>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="t-item exp">
+            <p class="t-date-top">2024</p>
+            <span class="t-marker" aria-hidden="true"><i></i></span>
+            <span class="t-arrow" aria-hidden="true"></span>
+            <div class="t-content">
+              <article class="t-card" tabindex="0">
+                <h3>Undergraduate Researcher</h3>
+                <div class="t-details">
+                  <p class="t-org">UC Santa Cruz · Baskin Engineering</p>
+                  <ul>
+                    <li><strong>Generative AI research</strong> at Baskin Engineering, including QAgent, an automated QA/testing agent for evaluating model behaviour.</li>
+                    <li>Research was about automating the QA process for Android applications.</li>
+                  </ul>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="t-item exp">
+            <p class="t-date-top">SUMMER 2025</p>
+            <span class="t-marker" aria-hidden="true"><i></i></span>
+            <span class="t-arrow" aria-hidden="true"></span>
+            <div class="t-content">
+              <article class="t-card" tabindex="0">
+                <h3>Software Development Engineer Intern</h3>
+                <div class="t-details">
+                  <p class="t-org">Amazon Web Services · Transit Gateway</p>
+                  <ul>
+                    <li>Built a <strong>modular chaos engineering framework</strong> for Transit Gateway routing, so fault-injection tests could be composed and reused across data paths instead of written one-off.</li>
+                  </ul>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="t-item exp">
+            <p class="t-date-top">APR 2026 —<br />PRESENT</p>
+            <span class="t-marker" aria-hidden="true"><i></i></span>
+            <span class="t-arrow" aria-hidden="true"></span>
+            <div class="t-content">
+              <article class="t-card" tabindex="0">
+                <h3>Software Development Engineer 1</h3>
+                <div class="t-details">
+                  <p class="t-org">Amazon Web Services · Transit Gateway (Routing)</p>
+                  <ul>
+                    <li>Validating the new <strong>5-tuple Policy-Based Routing architecture</strong> (up from 2-tuple) across all five Transit Gateway attachment types, and catching release-blocking defects before production launch.</li>
+                    <li>Fixed a 4-year-old memory leak — <strong>memory usage improved 8×</strong>, so maintenance is needed less often.</li>
+                    <li>Extended the chaos testing framework to every TGW routing data path to improve resilience profiling, address issues in the service, and match the intended customer experience.</li>
+                    <li>On-call: defect fixes in Transit Gateway and VPC Route Server, leading standups and coordinating high-severity issues.</li>
+                  </ul>
+                </div>
+              </article>
+            </div>
+          </div>
+
         </div>
-        <div class="img-container-logos">
-          <a href="https://www.instagram.com/rjmallik154?igsh=YTQwZjQ0NmI0OA%3D%3D&utm_source=qr">
-          <img class="rounded-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1024px-Instagram_icon.png" alt="Instagram Logo" width="75" height="75">
-        </a>
-        </div>
-        <div class="img-container-logos"></div>
-          <a href= "mailto:rmallika@ucsc.edu" target ="_blank">
-          <img class="rounded-logo" src="data:image/png;base64,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" alt="Gmail Icon" width="75" height="75">
-        </a>
-        </div>
-        <br>
-        <!--In order to match all of the pictures added properly you have to add "style="margin-top: 30px;" as one of the attributes in the <img>" -->
-        <div class="img-container-logos">
-          <a href="https://github.com/rjmallik" target="_blank">
-          <img class="rounded-logo" src="data:image/png;base64,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" alt="Instagram Logo" style="margin-top: 30px;" width="75" height="75">
-        </a>
-        </div>
-      </div>
-    </ul>
-  </nav>
-  
-  <article>
-    <div style="display: flex; align-items: center;">
-      <div style="flex-grow: 1;">
-          <h1 style="margin-top: 60px ; margin-left: 105px; font-size: 90px; ">Rutujit(RJ)</h1>
-          <p style="margin-top:-40px ;margin-left: 95px; font-size: 20px;"> An Undergraduate College Scholars Student studying <br>Computer Science(B.S) at the University of California,<br>Santa Cruz aspiring to leave behind a mark in the world.<br></p>
-      </div>
-      <div>
-        <img src="RJpic.JPG" alt="RJ PFP" style="width: 325px; display: flex; height: 350px; margin-top: -15px; margin-left: 103px;">
       </div>
     </div>
-  </article>
-</section>
 
-<footer>
-  <h1>Personal Projects</h1>
-  <a href="https://www.canva.com/design/DAF_Psb4aeI/KekK7uSLFwGbW-k5hvumHQ/edit?utm_content=DAF_Psb4aeI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" class="link img" target="_blank">
-    <img class="rounded-logo" src="BrickLessLogo.png" alt="Foothill Logo" style="margin-top: -60px; margin-left: 70px; width: 250px; height: 250px;">
-  </a>
-</footer>
+    <footer>
+      <div class="wrap">
+        <div class="socials">
+          <a class="social-btn" href="https://github.com/rjmallik" target="_blank" rel="noopener" aria-label="GitHub — rjmallik" title="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+          <a class="social-btn" href="https://www.linkedin.com/in/rj-mallikarjuna" target="_blank" rel="noopener" aria-label="LinkedIn — rj-mallikarjuna" title="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
+          </a>
+          <a class="social-btn" href="https://www.instagram.com/rjmallik154" target="_blank" rel="noopener" aria-label="Instagram — rjmallik154" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.25"/><circle cx="17.4" cy="6.6" r=".6" fill="currentColor" stroke="none"/></svg>
+          </a>
+        </div>
+        <p class="copyright">&copy; 2026 RJ Mallik. All rights reserved.</p>
+      </div>
+    </footer>
 
-</body>
+    <script>
+      (function(){
+        "use strict";
+        var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        /* ---------- theme toggle (in-memory only) ---------- */
+        var root = document.documentElement;
+        var themeBtn = document.getElementById("themeBtn");
+        var themeLabel = document.getElementById("themeLabel");
+        function currentTheme(){
+          var t = root.getAttribute("data-theme");
+          if(t) return t;
+          return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        function syncLabel(){ themeLabel.textContent = currentTheme() === "dark" ? "light" : "dark"; }
+        syncLabel();
+        themeBtn.addEventListener("click", function(){
+          root.setAttribute("data-theme", currentTheme() === "dark" ? "light" : "dark");
+          syncLabel();
+        });
+
+        /* ---------- hero name typing ----------
+           Starts only once the hero is actually on screen (page loaded,
+           tab visible, heading in the viewport) and types slowly enough
+           to watch — previously it ran at script-parse time and was
+           finished (~0.9s) before the page was in front of the reader. */
+        var nameEl = document.getElementById("typedName");
+        var heroEl = nameEl ? nameEl.closest("h1") : null;
+        var NAME = "RJ Mallik";
+        var nameState = "pending"; /* pending | typing | done */
+        var nameDoneCallback = null;
+        function whenNameDone(fn){
+          if(nameState === "done" || reduced) fn();
+          else nameDoneCallback = fn;
+        }
+        function finishName(){
+          nameState = "done";
+          if(nameDoneCallback){ var cb = nameDoneCallback; nameDoneCallback = null; cb(); }
+        }
+        function runNameTyping(){
+          if(nameState === "typing") return;
+          if(reduced){ nameEl.textContent = NAME; finishName(); return; }
+          nameState = "typing";
+          nameEl.textContent = "";
+          var i = 0;
+          (function step(){
+            nameEl.textContent = NAME.slice(0, ++i);
+            if(i < NAME.length) setTimeout(step, 150 + Math.random() * 70);
+            else finishName();
+          })();
+        }
+        function scheduleNameTyping(){
+          if(nameState !== "pending") return;
+          if(reduced){ runNameTyping(); return; }
+          var begun = false;
+          var tryBegin = function(){
+            if(begun || nameState !== "pending") return;
+            if(document.hidden) return;
+            if(document.readyState !== "complete" && document.readyState !== "interactive") return;
+            begun = true;
+            /* hold a beat after the hero is visible so the eye lands first */
+            setTimeout(runNameTyping, 600);
+          };
+          document.addEventListener("visibilitychange", tryBegin);
+          window.addEventListener("load", tryBegin);
+          if("IntersectionObserver" in window && heroEl){
+            var io = new IntersectionObserver(function(entries){
+              for(var k = 0; k < entries.length; k++){
+                if(entries[k].isIntersecting){ tryBegin(); if(begun) io.disconnect(); }
+              }
+            }, { threshold: 0.4 });
+            io.observe(heroEl);
+          }
+          tryBegin();
+          /* safety net: never leave the heading blank */
+          setTimeout(function(){ if(nameState === "pending" && !document.hidden) tryBegin(); }, 2500);
+          setTimeout(function(){ if(nameState === "pending"){ begun = true; runNameTyping(); } }, 4500);
+        }
+        function replayNameTyping(){
+          if(reduced) return;
+          nameState = "pending";
+          nameEl.textContent = "";
+          scheduleNameTyping();
+        }
+        scheduleNameTyping();
+
+        /* ---------- scripted chat ---------- */
+        var body = document.getElementById("chatBody");
+        var input = document.getElementById("chatInput");
+        var buttons = Array.prototype.slice.call(document.querySelectorAll("#suggest button"));
+        var busy = false;
+        var asked = {};
+
+        var ANSWERS = {
+          who: '<p>I\u2019m RJ Mallik, a Software Development Engineer 1 at AWS.</p>' +
+               '<p>Before AWS I studied at UC Santa Cruz, where I <strong>double-majored in Computer Science and Mathematics</strong> and <strong>graduated with honors</strong>.</p>',
+          aws: '<p>I work on the Transit Gateway Routing team. Transit Gateway is a managed networking hub connecting all kinds of networking attachments.</p>',
+          now: '<p>Working as an SDE 1 at AWS.</p>',
+          study: '<p>I studied at the University of California, Santa Cruz, where I <strong>double-majored in Computer Science and Mathematics</strong> and <strong>graduated with honors</strong>.</p>' +
+               '<p>The pairing shaped how I work: computer science for building systems, mathematics for reasoning carefully about how they behave. Toward the end of the degree my interests settled on systems and networking, which is the thread that led to Transit Gateway.</p>',
+          before: '<p>Before AWS full-time, I did <strong>Generative AI research</strong> as an undergraduate at UC Santa Cruz, and I tutored Mathematics and Computer Science at Think Academy, <strong>also tutored college classes</strong> alongside my time at UCSC, to students of all ages, up to the college level.</p>' +
+               '<p>I also interned at AWS with Transit Gateway, where I built a modular chaos testing framework for TGW routing. Once I joined full time, I built on that work, extending the framework across the TGW routing data paths.</p>',
+          research: '<p>My undergraduate research was about automating the QA process for Android applications.</p>',
+          languages: '<p>Day to day it\u2019s mostly Python and Java. Across my resumes, coursework, research, and jobs, the full list is:</p>' +
+               '<div class="skill-pills"><span>Python</span><span>Java</span><span>C++</span><span>JavaScript</span><span>TypeScript</span><span>SQL</span><span>HTML</span><span>CSS</span><span>Scala</span><span>Kotlin</span><span>Swift</span><span>MATLAB</span><span>RISC-V</span><span>Rust</span></div>',
+          frameworks: '<p>For building apps and the tooling around them:</p>' +
+               '<div class="skill-pills"><span>React</span><span>Next.js</span><span>Node.js</span><span>Tailwind CSS</span><span>tRPC</span><span>Drizzle</span><span>Supabase</span><span>Vercel</span><span>Clerk</span><span>Pandas</span><span>APIs</span><span>Database Management</span><span>Debugging</span><span>QA Automation</span><span>Machine Learning</span><span>Generative AI</span></div>' +
+               '<p>That\u2019s the set behind QAgent at Baskin Engineering: React and TypeScript up front, tRPC into Next.js, Drizzle and Supabase for data, Clerk for authentication, and Vercel to deploy it.</p>',
+          systems: '<p>Systems and cloud is where I spend most of my time now:</p>' +
+               '<div class="skill-pills"><span>AWS</span><span>Transit Gateway</span><span>VPC Route Server</span><span>Policy-Based Routing</span><span>Cloud Networking</span><span>Cloud Computing</span><span>Cloud Infrastructure</span><span>Distributed Systems</span><span>Lambda</span><span>API Gateway</span><span>Aurora Postgres</span><span>S3</span><span>CloudFront</span><span>Cognito</span><span>Chaos Engineering</span><span>Monitoring Dashboards</span><span>Automated Validation Workflows</span></div>' +
+               '<p>Alongside that: Incident Management, Operations, Risk Analysis, Agile / Scrum, Cross-Functional Leadership, and Mathematical Reasoning. Certifications and earlier training: AWS Certified Cloud Practitioner, laboratory / electrical research, and 3D printing.</p>',
+          projects: '<p>I have a big passion for building and trying to create day to day solutions. Check out my <a href="https://github.com/rjmallik" target="_blank" rel="noopener">GitHub</a>!</p>'
+        };
+
+        function addUserBubble(text){
+          var d = document.createElement("div");
+          d.className = "msg user fade-in";
+          d.textContent = text;
+          body.appendChild(d);
+        }
+        function addAiRow(html){
+          var row = document.createElement("div");
+          row.className = "msg-row fade-in";
+          var av = document.createElement("span");
+          av.className = "avatar"; av.textContent = "RJ"; av.setAttribute("aria-hidden","true");
+          var d = document.createElement("div");
+          d.className = "msg ai";
+          d.innerHTML = html;
+          row.appendChild(av); row.appendChild(d);
+          body.appendChild(row);
+          return d;
+        }
+        function showTyping(){
+          var row = document.createElement("div");
+          row.className = "msg-row";
+          var av = document.createElement("span");
+          av.className = "avatar"; av.textContent = "RJ"; av.setAttribute("aria-hidden","true");
+          var d = document.createElement("div");
+          d.className = "msg ai typing";
+          d.innerHTML = "<i></i><i></i><i></i>";
+          row.appendChild(av); row.appendChild(d);
+          body.appendChild(row);
+          return row;
+        }
+
+        function ask(key, label){
+          if(busy) return;
+          busy = true;
+          buttons.forEach(function(b){ b.disabled = true; });
+          var finish = function(){
+            addUserBubble(label);
+            var t = showTyping();
+            setTimeout(function(){
+              t.remove();
+              addAiRow(ANSWERS[key]);
+              asked[key] = true;
+              buttons.forEach(function(b){
+                b.disabled = false;
+                if(asked[b.getAttribute("data-q")]) b.classList.add("asked");
+              });
+              busy = false;
+            }, reduced ? 60 : 750);
+          };
+          if(reduced){ input.value = label; finish(); return; }
+          input.value = "";
+          var i = 0;
+          (function step(){
+            input.value = label.slice(0, ++i);
+            if(i < label.length) setTimeout(step, 34);
+            else setTimeout(function(){ input.value = ""; finish(); }, 260);
+          })();
+        }
+
+        buttons.forEach(function(b){
+          b.addEventListener("click", function(){
+            ask(b.getAttribute("data-q"), b.textContent.trim());
+          });
+        });
+
+        /* ---------- page switching (Home / Experience, top bar only) ---------- */
+        var pages = {
+          home: document.getElementById("page-home"),
+          experience: document.getElementById("page-experience")
+        };
+        var navLinks = Array.prototype.slice.call(document.querySelectorAll("nav.main a[data-page]"));
+        var chatStarted = false;
+        function startChatOnce(){
+          if(chatStarted) return;
+          chatStarted = true;
+          /* wait until the name has visibly typed in before the chat starts */
+          whenNameDone(function(){
+            setTimeout(function(){ ask("who", "who are you?"); }, reduced ? 200 : 600);
+          });
+        }
+        function pageFromHash(){
+          return window.location.hash.replace("#","") === "experience" ? "experience" : "home";
+        }
+        var pageShownOnce = false;
+        function showPage(name, pushHash){
+          var returning = pageShownOnce;
+          pageShownOnce = true;
+          Object.keys(pages).forEach(function(k){ pages[k].hidden = k !== name; });
+          navLinks.forEach(function(a){
+            var on = a.getAttribute("data-page") === name;
+            a.classList.toggle("active", on);
+            if(on) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
+          });
+          document.title = name === "experience"
+            ? "Experience — RJ Mallik"
+            : "RJ Mallik — SDE @ AWS Transit Gateway";
+          if(pushHash){
+            var target = name === "experience" ? "#experience" : "#home";
+            if(window.location.hash !== target) history.pushState(null, "", target);
+          }
+          window.scrollTo(0, 0);
+          if(name === "home"){
+            /* coming back to Home replays the name typing, like a fresh open */
+            if(returning && nameState === "done") replayNameTyping();
+            startChatOnce();
+          }
+        }
+        navLinks.forEach(function(a){
+          a.addEventListener("click", function(ev){
+            ev.preventDefault();
+            showPage(a.getAttribute("data-page"), true);
+          });
+        });
+        window.addEventListener("hashchange", function(){ showPage(pageFromHash(), false); });
+        window.addEventListener("popstate", function(){ showPage(pageFromHash(), false); });
+        showPage(pageFromHash(), false);
+
+        /* ---------- timeline cards: tap / click toggles expansion (touch + keyboard) ---------- */
+        var cards = Array.prototype.slice.call(document.querySelectorAll(".t-card"));
+        cards.forEach(function(card){
+          card.addEventListener("click", function(){
+            var was = card.classList.contains("expanded");
+            cards.forEach(function(c){ c.classList.remove("expanded"); });
+            if(!was) card.classList.add("expanded");
+          });
+        });
+      })();
+    </script>
+  </body>
 </html>
-
