@@ -267,8 +267,8 @@
            for the narrow layout and for the last stop's expanded
            state, the two cases where the last dot's position
            actually moves: on phones the columns are fixed-width
-           (196px collapsed / 300px expanded), so the dot sits
-           exactly 98px / 150px from the track's right edge at EVERY
+           (176px collapsed / 280px expanded), so the dot sits
+           exactly 88px / 140px from the track's right edge at EVERY
            phone width — 320px, 360px, 390px, 430px alike — and this
            cap geometry holds identically on all of them. */
         --tl-tail:70px;
@@ -349,9 +349,15 @@
          stop's dot, so it reads as pointing from the experience
          context to its dot. A short accent stem centred on the dot,
          with a small triangle head at its top touching the dot. */
+      /* sized for parity with the degree arrow: the stem spans the
+         full 40px row gap between the dot row and the card — the
+         triangle tip stops ~2.5px below the dot's bottom edge and
+         the stem ends flush at the card's top edge, the same two
+         distances the degree arrow keeps from its dot and its card,
+         so every arrow on the timeline sits symmetrically */
       .t-arrow{
-        position:absolute;left:50%;top:32px;transform:translateX(-50%);
-        width:2px;height:14px;background:var(--accent);z-index:0;pointer-events:none;
+        position:absolute;left:50%;top:24px;transform:translateX(-50%);
+        width:2px;height:32px;background:var(--accent);z-index:0;pointer-events:none;
       }
       .t-arrow::after{
         content:"";position:absolute;left:50%;bottom:100%;transform:translateX(-50%);
@@ -462,19 +468,19 @@
         /* the track stretches to the full width of all nine stops, so
            the spine on it runs under every dot from Born to SDE 1
            instead of ending one screen in */
-        .tl-track{width:max-content;min-width:100%;--tl-tail:98px}
-        /* phone, last stop expanded: its column is 300px wide, so its
-           dot sits 150px from the track's right edge */
+        .tl-track{width:max-content;min-width:100%;gap:8px;--tl-tail:88px}
+        /* phone, last stop expanded: its column is 280px wide, so its
+           dot sits 140px from the track's right edge */
         .tl-track:has(> .t-item:last-child .t-card:hover),
         .tl-track:has(> .t-item:last-child .t-card:focus-visible),
-        .tl-track:has(> .t-item:last-child .t-card.expanded){--tl-tail:150px}
-        .t-item{flex:0 0 196px}
-        .t-item.milestone{flex:0 0 108px}
-        .t-item:has(.t-card:hover),.t-item:has(.t-card:focus-visible),.t-item:has(.t-card.expanded){flex:0 0 300px}
-        /* degree column stays 196px on narrow screens too; its window
-           still overlays on top and reaches 4 x 196px + 50px = 834px
+        .tl-track:has(> .t-item:last-child .t-card.expanded){--tl-tail:140px}
+        .t-item{flex:0 0 176px}
+        .t-item.milestone{flex:0 0 84px}
+        .t-item:has(.t-card:hover),.t-item:has(.t-card:focus-visible),.t-item:has(.t-card.expanded){flex:0 0 280px}
+        /* degree column stays 176px on narrow screens too; its window
+           still overlays on top and reaches 4 x 176px + 50px = 754px
            wide, ending after the intern position, before the SDE 1 dot */
-        .t-item.degree:has(.t-card:hover),.t-item.degree:has(.t-card:focus-visible),.t-item.degree:has(.t-card.expanded){flex:0 0 196px}
+        .t-item.degree:has(.t-card:hover),.t-item.degree:has(.t-card:focus-visible),.t-item.degree:has(.t-card.expanded){flex:0 0 176px}
         .t-card{padding:14px 16px}
         .t-card h3{font-size:16px}
       }
