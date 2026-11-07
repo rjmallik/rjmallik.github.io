@@ -251,24 +251,45 @@
            expanded) — the line and its arrowhead trailed ~98px past
            the SDE 1 dot (150px with that card expanded): a long empty
            orange run with no stops on it, after the last experience.
-           The spine now ends just past that dot: the line runs 5px
-           beyond its centre (the dot itself is 15px wide, so the
-           line tucks just under its right edge) and the arrowhead
-           takes the next 11px, so the arrow finishes 16px after
-           the last experience — a short cap, not a long empty run.
-           --tl-tail is re-set below for the
-           narrow layout and for the last stop's expanded state, the
-           two cases where the last dot's position actually moves. */
+           The end cap is short but CONTINUOUS, all measured from
+           that dot (15px wide, so its right edge is 7.5px past its
+           centre):
+           - the spine line runs UNDER the dot and straight out the
+             other side to the arrowhead, ending 18px past the dot
+             centre (right: tail - 18px) — 2px INSIDE the arrowhead,
+             so line and head overlap and can never open up a gap at
+             any zoom, pixel ratio, or phone width;
+           - the 11px arrowhead sits with its base 16px past the dot
+             centre and its tip 27px past it, welded onto the line.
+           One connected orange cap — line, dot, line, arrowhead —
+           not a long empty run, and not a detached floating
+           triangle either. --tl-tail is re-set below
+           for the narrow layout and for the last stop's expanded
+           state, the two cases where the last dot's position
+           actually moves: on phones the columns are fixed-width
+           (196px collapsed / 300px expanded), so the dot sits
+           exactly 98px / 150px from the track's right edge at EVERY
+           phone width — 320px, 360px, 390px, 430px alike — and this
+           cap geometry holds identically on all of them. */
         --tl-tail:70px;
         position:relative;padding-top:var(--tl-top);
         display:flex;gap:10px;align-items:flex-start;
       }
       .tl-track::before{
-        content:"";position:absolute;left:4px;right:calc(var(--tl-tail) - 5px);top:calc(var(--tl-top) + 7px);height:2px;border-radius:2px;
-        background:linear-gradient(to right,var(--accent),var(--line) 16%,var(--line) 84%,var(--accent));
+        content:"";position:absolute;left:4px;right:calc(var(--tl-tail) - 18px);top:calc(var(--tl-top) + 7px);height:2px;border-radius:2px;
+        /* orange only in short FIXED lengths at the two ends, grey
+           in between. The end blends used to be percentages (16% /
+           84%) of the whole line, so on a phone — where the track is
+           ~1,490px wide to hold all nine stops — the solid orange
+           run feeding the final arrowhead stretched ~220px, over
+           half a phone screen: the "arrow" looked like it went on
+           far too long, only on phone. Fixed pixel stops keep the
+           orange shaft short (~48px into the last dot) at every
+           width, phone and desktop alike. */
+        background:linear-gradient(to right,var(--accent),var(--line) 72px,var(--line) calc(100% - 48px),var(--accent) calc(100% - 20px));
       }
       .tl-track::after{
-        content:"";position:absolute;right:calc(var(--tl-tail) - 16px);top:calc(var(--tl-top) + 3px);
+        content:"";position:absolute;right:calc(var(--tl-tail) - 27px);top:calc(var(--tl-top) + 3px);
         border-left:11px solid var(--accent);border-top:5px solid transparent;border-bottom:5px solid transparent;
       }
       /* desktop: the last stop's column grows when its own card is
@@ -329,7 +350,7 @@
          context to its dot. A short accent stem centred on the dot,
          with a small triangle head at its top touching the dot. */
       .t-arrow{
-        position:absolute;left:50%;top:24px;transform:translateX(-50%);
+        position:absolute;left:50%;top:32px;transform:translateX(-50%);
         width:2px;height:14px;background:var(--accent);z-index:0;pointer-events:none;
       }
       .t-arrow::after{
@@ -355,7 +376,7 @@
          card and spine pointing up to the dot, so the item's grid
          collapses to just dot + content and the row gap leaves room
          for that arrow. */
-      .t-item.exp{grid-template-rows:16px 1fr;grid-template-areas:"dot" "content";row-gap:28px}
+      .t-item.exp{grid-template-rows:16px 1fr;grid-template-areas:"dot" "content";row-gap:40px}
       .t-date-top{
         position:absolute;left:50%;top:-10px;transform:translate(-50%,-100%);
         width:max-content;max-width:132px;text-align:center;z-index:2;
@@ -471,6 +492,85 @@
         html{scroll-behavior:auto}
         .cursor,.typing i,.fade-in{animation:none}
         .t-card,.t-details,.t-marker i,.t-item{transition:none}
+      }
+
+      /* ---------- all phones & devices ----------
+         Robustness pass so the same page holds up on every screen
+         that opens it — small phones (320px and up), large phones,
+         foldables, tablets, landscape phones, and notched devices —
+         not just the one phone width it was tuned on:
+         - the PAGE never scrolls sideways on any device (only the
+           timeline row scrolls, inside its own box, by design);
+           overflow-x:clip is used rather than hidden so the sticky
+           top bar keeps sticking where clip is supported;
+         - notched phones get their safe-area insets added to the
+           top bar and footer instead of content sliding under the
+           notch or the home indicator (insets are 0 elsewhere);
+         - touch targets meet a ~40px minimum on coarse pointers,
+           so thumbs on any phone can hit the theme toggle, the nav,
+           and the chat question pills reliably;
+         - very small phones get a compact pass: the hero name, the
+           page heading, the top bar, and the chat chrome all scale
+           down instead of overflowing or crowding;
+         - the chat input is 16px on phones, so iOS Safari does not
+           auto-zoom the page when it is tapped;
+         - long question pills and bubbles wrap inside the screen
+           instead of pushing past its edge;
+         - short landscape phones lose the tall hero padding so the
+           chat is reachable without a long scroll. */
+      html,body{overflow-x:clip;max-width:100%}
+      *{-webkit-tap-highlight-color:transparent}
+      img,svg,video,canvas{max-width:100%}
+      .topbar{
+        padding-top:calc(14px + env(safe-area-inset-top,0px));
+        padding-left:calc(22px + env(safe-area-inset-left,0px));
+        padding-right:calc(22px + env(safe-area-inset-right,0px));
+      }
+      footer{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+      .htimeline{overscroll-behavior-x:contain}
+      .suggest button{max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
+      .t-card h3,.t-org,.t-label{overflow-wrap:anywhere}
+      @media (pointer:coarse){
+        .theme-btn{min-height:40px}
+        .brand{min-width:44px;min-height:40px}
+        nav.main a{display:inline-flex;align-items:center;min-height:40px}
+        .suggest button{min-height:40px}
+        footer .social-btn{width:48px;height:48px}
+      }
+      @media (max-width:560px){
+        .topbar{
+          padding-top:calc(12px + env(safe-area-inset-top,0px));
+          padding-left:calc(16px + env(safe-area-inset-left,0px));
+          padding-right:calc(16px + env(safe-area-inset-right,0px));
+        }
+        .chat-input input{font-size:16px}
+      }
+      @media (max-width:400px){
+        .topbar{gap:8px}
+        .theme-btn{font-size:11px;padding:6px 9px 6px 7px}
+        nav.main{gap:2px}
+        nav.main a{font-size:11.5px;padding-left:5px;padding-right:5px}
+        .hero{padding-top:44px}
+        .hero h1{font-size:clamp(42px,14.5vw,56px)}
+        .exp-hero{padding-top:32px}
+        .exp-hero h2{font-size:36px}
+        .exp-hero .outside{font-size:16.5px}
+        section{padding-top:52px}
+        .chat-head{padding:11px 12px;gap:6px}
+        .chat-body{padding:18px 12px 8px;gap:12px}
+        .suggest{padding-left:12px;padding-right:12px}
+        .chat-input{margin-left:10px;margin-right:10px;padding:10px 12px}
+        .msg{font-size:14.5px}
+        .msg.user{font-size:13px}
+      }
+      @media (max-width:340px){
+        .wrap{padding:0 12px}
+        .theme-btn #themeLabel{display:none}
+      }
+      @media (max-height:480px) and (orientation:landscape){
+        .hero{padding-top:28px;padding-bottom:10px}
+        .exp-hero{padding-top:24px}
+        section{padding-top:32px}
       }
     </style>
   </head>
