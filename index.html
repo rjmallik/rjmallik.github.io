@@ -467,13 +467,43 @@
         }
         /* the track stretches to the full width of all nine stops, so
            the spine on it runs under every dot from Born to SDE 1
-           instead of ending one screen in */
-        .tl-track{width:max-content;min-width:100%;gap:8px;--tl-tail:88px}
-        /* phone, last stop expanded: its column is 280px wide, so its
-           dot sits 140px from the track's right edge */
+           instead of ending one screen in. PHONE TAIL: the last
+           column's dot is no longer centred in its column (that alone
+           forced an 88px tail collapsed, 140px expanded — half the
+           column width past the dot to the track's right edge).
+           Instead the last dot sits near the track's right edge (see
+           the :last-child rules below), so the tail past the SDE 1
+           dot centre is just 24px in BOTH states, and the end cap
+           shrinks to match: the spine ends 18px past the dot centre
+           and a smaller 9px arrowhead tips 22px past it, welded onto
+           the line and inside the track edge. */
+        .tl-track{width:max-content;min-width:100%;gap:8px;--tl-tail:24px}
+        .tl-track::after{
+          right:calc(var(--tl-tail) - 22px);top:calc(var(--tl-top) + 4px);
+          border-left:9px solid var(--accent);border-top:4px solid transparent;border-bottom:4px solid transparent;
+        }
+        /* phone, last stop expanded: its column grows to 280px, but
+           its dot stays pinned 24px from the track's right edge (it
+           is right-aligned in its column, not centred), so the tail
+           does NOT grow back — still 24px */
         .tl-track:has(> .t-item:last-child .t-card:hover),
         .tl-track:has(> .t-item:last-child .t-card:focus-visible),
-        .tl-track:has(> .t-item:last-child .t-card.expanded){--tl-tail:140px}
+        .tl-track:has(> .t-item:last-child .t-card.expanded){--tl-tail:24px}
+        /* last stop on phone: dot pinned near the right edge of its
+           column — the marker row right-aligns the 15px dot with
+           17px of padding, putting its centre 24.5px from the
+           track's right edge regardless of the column's width
+           (176px collapsed / 280px expanded). The up-arrow and the
+           date above the spine move with the dot so they stay
+           centred on it; the date is shifted a little further left
+           (translate -78%) so its right edge stays inside the track
+           instead of poking past it and re-adding scroll width.
+           The SDE 1 card keeps its full column width below — only
+           the dot's position inside the column changes, nothing is
+           shrunk or cut off. */
+        .tl-track > .t-item:last-child .t-marker{justify-content:flex-end;padding-right:17px}
+        .tl-track > .t-item:last-child .t-arrow{left:calc(100% - 24px)}
+        .tl-track > .t-item:last-child .t-date-top{left:calc(100% - 24px);transform:translate(-78%,-100%)}
         .t-item{flex:0 0 176px}
         .t-item.milestone{flex:0 0 84px}
         .t-item:has(.t-card:hover),.t-item:has(.t-card:focus-visible),.t-item:has(.t-card.expanded){flex:0 0 280px}
