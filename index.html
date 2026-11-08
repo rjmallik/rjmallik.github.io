@@ -476,11 +476,14 @@
              it runs underneath — Think Academy, the researcher
              stop, and the internship — ending past the internship;
            - every other card sits on the RIGHT of the spine;
-           - the dates / times sit on the LEFT of the spine too,
-             right-aligned against it — except the three stops the
-             degree card passes alongside, whose dates sit just
-             above their own cards on the right so the degree card
-             and the dates never collide.
+           - the milestone stops (no card) split across the spine:
+             year on the LEFT, right-aligned against it, event
+             label on the RIGHT;
+           - every experience date sits just above its own card
+             on the RIGHT, so they all match — for the three stops
+             the degree card passes alongside that also keeps the
+             degree card and the dates from colliding; only the
+             degree date stays on the LEFT, above its left card.
            Nothing scrolls sideways, and the spine is drawn per stop
            (a segment under each dot, see .t-marker::after below),
            so it always ends at the last dot, with only the same
@@ -542,32 +545,41 @@
            the card sits right under its date, so they are dropped */
         .t-arrow,.degree-arrow{display:none}
         /* dates, times, and labels come off their absolute perch
-           above the horizontal spine and into the LEFT column,
-           right-aligned against the spine: label above year for
-           the milestones (the year sits at the bottom of the cell,
-           under the label), and the date / time for the degree and
-           experience stops */
+           above the horizontal spine: for the milestones (the
+           stops with no card to expand) the year sits in the LEFT
+           column, right-aligned against the spine, and the event
+           label sits in the RIGHT column, left-aligned — date on
+           the left, event on the right. The degree date stays in
+           the left column above its left-side card; the experience
+           dates sit above their own cards on the right (below). */
         .t-top-label{
           position:static;transform:none;width:auto;max-width:none;
-          text-align:right;grid-column:1;align-self:start;margin:0 0 20px;
+          text-align:left;grid-column:3;align-self:start;margin:0;
         }
         .t-date{grid-area:auto;grid-column:1;text-align:right;align-self:start;margin:0}
-        .t-item.milestone .t-date{align-self:end}
+        .t-item.milestone .t-date{align-self:start}
         .t-date-top{
           position:static;transform:none;width:auto;max-width:none;left:auto;
           grid-column:1;text-align:right;align-self:start;margin:0;
         }
-        /* the three stops the degree card passes alongside —
-           Think Academy, researcher, intern — keep their dates
-           just above their own cards on the right instead, so the
-           stretched degree card never covers them */
+        /* every experience stop keeps its date just above its
+           own card on the RIGHT, so all the experience dates
+           match: for Think Academy, the researcher stop, and the
+           internship that is also what keeps them clear of the
+           stretched degree card on the left, and the full-time
+           SDE 1 stop follows the same pattern instead of leaving
+           its date alone in the left column */
         .tl-track > .t-item:nth-child(6) .t-date-top,
         .tl-track > .t-item:nth-child(7) .t-date-top,
-        .tl-track > .t-item:nth-child(8) .t-date-top{grid-column:3;text-align:left}
-        /* cards on the RIGHT of the spine; for the three stops
-           above, the card drops enough to clear its date line(s) */
+        .tl-track > .t-item:nth-child(8) .t-date-top,
+        .tl-track > .t-item:nth-child(9) .t-date-top{grid-column:3;text-align:left}
+        /* cards on the RIGHT of the spine; for the stops above,
+           the card drops enough to clear its date line(s) — the
+           two-line dates (Think Academy, SDE 1) drop further than
+           the one-line dates (researcher, intern) */
         .t-content{grid-area:auto;grid-column:3;width:100%;min-width:0;align-self:start}
-        .tl-track > .t-item:nth-child(6) .t-content{margin-top:38px}
+        .tl-track > .t-item:nth-child(6) .t-content,
+        .tl-track > .t-item:nth-child(9) .t-content{margin-top:38px}
         .tl-track > .t-item:nth-child(7) .t-content,
         .tl-track > .t-item:nth-child(8) .t-content{margin-top:23px}
         /* the degree card sits on the LEFT of the spine, under
